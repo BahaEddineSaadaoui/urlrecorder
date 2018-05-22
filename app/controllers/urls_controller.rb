@@ -24,6 +24,24 @@ class UrlsController < ApplicationController
   # POST /urls
   # POST /urls.json
   def create
+    if Url.exists?(:link => url_params[:link])
+      urls = Url.where(:link => url_params[:link])
+      url = non_expired(urls).first
+      check(url, url_params)
+    else
+      record url_params
+    end
+  end
+
+  def check(url, url_params)
+    if !url.nil? && !Url.expired(url)
+      redirect_to url, notice: 'Url already exists.'
+    else
+      record url_params
+    end
+  end
+
+  def record url_params
     @url = Url.new(url_params)
     @url.content = HTTParty.get(url_params[:link])
 
@@ -36,6 +54,14 @@ class UrlsController < ApplicationController
         format.json { render json: @url.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def non_expired urls
+    temp = []
+    urls.each do |url|
+      temp << url if !Url.expired(url)
+    end
+    temp
   end
 
   # PATCH/PUT /urls/1
@@ -63,13 +89,13 @@ class UrlsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_url
-      @url = Url.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_url
+    @url = Url.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def url_params
-      params.require(:url).permit(:link, :content)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def url_params
+    params.require(:url).permit(:link, :content)
+  end
 end
