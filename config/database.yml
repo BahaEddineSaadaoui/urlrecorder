@@ -12,4 +12,6 @@ production:
 test:
   adapter: postgresql
   encoding: utf8
-  database: snighter_test
+  username: postgres
+  password: sberocknroll
+  database: urlrecorder_test
