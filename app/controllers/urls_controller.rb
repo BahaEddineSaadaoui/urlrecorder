@@ -25,6 +25,7 @@ class UrlsController < ApplicationController
   # POST /urls.json
   def create
     @url = Url.new(url_params)
+    @url.content = HTTParty.get(url_params[:link])
 
     respond_to do |format|
       if @url.save
@@ -69,6 +70,6 @@ class UrlsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def url_params
-      params.require(:url).permit(:content)
+      params.require(:url).permit(:link, :content)
     end
 end

@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   
   resources :urls
-  root to: "front#home"
+  get '/pages' => 'urls#index'
+  
+  root to: "urls#new"
 
 end

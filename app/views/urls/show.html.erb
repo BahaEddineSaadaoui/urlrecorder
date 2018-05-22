@@ -1,9 +1,12 @@
 <p id="notice"><%= notice %></p>
 
 <p>
+  <strong>Link:</strong>
+  <%= @url.link %>
+</p>
+<p>
   <strong>Content:</strong>
-  <%= @url.content %>
+  <iframe src="<%= @url.content.html_safe %>" height="200px" width="500px">error!</iframe>
 </p>
 
-<%= link_to 'Edit', edit_url_path(@url) %> |
 <%= link_to 'Back', urls_path %>
